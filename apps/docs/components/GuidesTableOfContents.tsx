@@ -6,7 +6,7 @@ import { proxy, useSnapshot } from 'valtio'
 import {
   highlightSelectedTocItem,
   removeAnchor,
-} from '~/components/CustomHTMLElements/CustomHTMLElements.utils'
+} from 'ui/src/components/CustomHTMLElements/CustomHTMLElements.utils'
 import { Feedback } from '~/components/Feedback'
 import useHash from '~/hooks/useHash'
 
@@ -83,10 +83,13 @@ const GuidesTableOfContents = ({
         .filter((heading) => heading.id)
         .map((heading) => {
           const text = heading.textContent.replace('#', '')
-          const link = heading.querySelector('a').getAttribute('href')
+          const link = heading.querySelector('a')?.getAttribute('href')
+          if (!link) return null
+
           const level = heading.tagName === 'H2' ? 2 : 3
           return { text, link, level }
         })
+        .filter(Boolean)
       setTocList(newHeadings)
     })
 
